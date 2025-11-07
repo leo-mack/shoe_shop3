@@ -9,10 +9,33 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Sandwich Shop App',
-      home: OrderScreen(maxQuantity: 5),
-    ); // Use Order Screen in App
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Sandwich Counter')),
+  body: Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const OrderItemDisplay(5, 'Footlong'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => print('Add button pressed!'),
+              child: const Text('Add'),
+            ),
+            ElevatedButton(
+              onPressed: () => print('Remove button pressed!'),
+              child: const Text('Remove'),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+      ),
+    );
   }
 }
 class OrderScreen extends StatefulWidget {
@@ -31,75 +54,45 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold and UI belong to the screen (stateful), so the state
-    // can read and modify the private `_quantity` field.
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sandwich Counter'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Pass the private `_quantity` down to the display widget.
-            OrderItemDisplay(
-              quantity: _quantity,
-              itemType: 'Footlong',
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_quantity < widget.maxQuantity) {
-                        _quantity++;
-                      }
-                    });
-                  },
-                  child: const Text('Add'),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_quantity > 0) {
-                        _quantity--;
-                      }
-                    });
-                  },
-                  child: const Text('Remove'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return const Placeholder();
   }
 }
 class OrderItemDisplay extends StatelessWidget {
   final int quantity;
   final String itemType;
 
-  const OrderItemDisplay({super.key, required this.quantity, required this.itemType});
+  const OrderItemDisplay(this.quantity, this.itemType, {super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          itemType,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Quantity: $quantity',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
-    );
-  }
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Sandwich Counter'),
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          OrderItemDisplay(
+            _quantity,
+            'Footlong',
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => print('Add button pressed!'),
+                child: const Text('Add'),
+              ),
+              ElevatedButton(
+                onPressed: () => print('Remove button pressed!'),
+                child: const Text('Remove'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }
