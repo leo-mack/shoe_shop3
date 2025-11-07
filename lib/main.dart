@@ -12,7 +12,7 @@ class App extends StatelessWidget {
     return const MaterialApp(
       title: 'Sandwich Shop App',
       home: OrderScreen(maxQuantity: 5),
-    );
+    ); // Use Order Screen in App
   }
 }
 class OrderScreen extends StatefulWidget {
