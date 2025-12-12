@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
+import 'package:sandwich_shop/views/sign_in_screen.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
@@ -80,6 +81,15 @@ class _OrderScreenState extends State<OrderScreen> {
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) => CartScreen(cart: _cart),
+      ),
+    );
+  }
+
+  void _navigateToSignIn() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const SignInScreen(),
       ),
     );
   }
@@ -236,6 +246,14 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _navigateToSignIn,
+        icon: const Icon(Icons.person),
+        label: const Text('Sign In'),
+        backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }
