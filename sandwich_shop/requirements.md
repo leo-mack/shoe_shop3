@@ -350,3 +350,422 @@ These may be considered for future iterations.
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2025-12-12 | Initial | Created requirements document |
+| 1.1 | 2025-12-12 | Update | Added User Authentication Feature requirements |
+
+---
+
+# Feature Request: User Authentication (Sign-In Screen)
+
+## Feature Prompt
+
+**Title**: Implement User Authentication with Sign-In Screen
+
+**Description**: Add user authentication capabilities to the sandwich shop app by creating a dedicated sign-in screen accessible from the order screen. Users should be able to sign in with email and password credentials through a secure and user-friendly interface.
+
+**User Story**: As a customer of the sandwich shop app, I want to sign in to my account so that I can access personalized features, save my preferences, and view my order history.
+
+**Access Point**: Add a floating action button on the bottom-left corner of the order screen with a person icon and "Sign In" label that navigates to the sign-in screen.
+
+---
+
+## Requirements: User Authentication Feature
+
+### 1. Feature Overview
+
+#### Purpose
+- Enable user authentication for personalized experiences
+- Provide secure credential entry for email/password login
+- Create foundation for future features (order history, saved addresses, preferences)
+- Improve user engagement through personalized accounts
+
+#### Business Value
+- Increased user retention through account creation
+- Foundation for loyalty programs and personalized marketing
+- Better user data collection for analytics
+- Enhanced security for user orders and payment information
+
+---
+
+### 2. User Stories
+
+#### US-6: Access Sign-In Screen
+**As a** new or returning customer  
+**I want to** easily access the sign-in screen from the main ordering interface  
+**So that** I can log into my account without navigating through multiple menus
+
+**Priority**: High  
+**Story Points**: 2
+
+---
+
+#### US-7: Sign In with Email and Password
+**As a** registered customer  
+**I want to** sign in using my email address and password  
+**So that** I can access my account and personalized features
+
+**Priority**: High  
+**Story Points**: 5
+
+---
+
+#### US-8: View Password While Typing
+**As a** customer entering my password  
+**I want to** toggle password visibility  
+**So that** I can verify I've typed my password correctly
+
+**Priority**: Medium  
+**Story Points**: 2
+
+---
+
+#### US-9: Receive Sign-In Feedback
+**As a** customer attempting to sign in  
+**I want to** receive clear feedback about the sign-in status  
+**So that** I know whether my sign-in was successful or if there are errors
+
+**Priority**: High  
+**Story Points**: 3
+
+---
+
+### 3. Acceptance Criteria
+
+#### AC-7: Sign-In Button on Order Screen
+
+**Given** I am on the order screen  
+**When** I look at the bottom-left corner of the screen  
+**Then** I see a floating action button with a person icon and "Sign In" label  
+**And** the button is styled in orange to match the app theme  
+**And** the button is always visible regardless of scroll position
+
+**When** I tap the sign-in button  
+**Then** I navigate to the sign-in screen  
+**And** the navigation transition is smooth
+
+**Additional Criteria**:
+- [ ] Button uses `FloatingActionButton.extended` widget
+- [ ] Button positioned at `FloatingActionButtonLocation.startFloat`
+- [ ] Button has clear visual distinction from other UI elements
+- [ ] Button remains accessible and doesn't overlap with content
+
+---
+
+#### AC-8: Sign-In Screen Layout
+
+**Given** I navigate to the sign-in screen  
+**Then** I see a well-structured sign-in form with:
+- [ ] App logo at the top
+- [ ] "Welcome Back!" heading
+- [ ] "Sign in to your account" subtitle
+- [ ] Email input field with email icon
+- [ ] Password input field with lock icon
+- [ ] Password visibility toggle button
+- [ ] Sign-in button
+- [ ] "Forgot Password?" link
+- [ ] "Don't have an account? Sign Up" link
+
+**And** all elements are properly styled and aligned  
+**And** the screen is scrollable to accommodate different screen sizes  
+**And** there is a back button in the AppBar to return to the order screen
+
+---
+
+#### AC-9: Email Validation
+
+**Given** I am on the sign-in screen  
+**When** I attempt to submit the form with an empty email field  
+**Then** I see an error message "Please enter your email"  
+**And** the form does not submit
+
+**When** I enter an email without "@" symbol  
+**Then** I see an error message "Please enter a valid email"  
+**And** the form does not submit
+
+**When** I enter a valid email format  
+**Then** no email error is displayed  
+**And** I can proceed with form submission (if password is valid)
+
+**Additional Criteria**:
+- [ ] Email validation occurs on form submission
+- [ ] Email field has keyboard type set to `TextInputType.emailAddress`
+- [ ] Error messages are clear and actionable
+- [ ] Validation prevents submission with invalid emails
+
+---
+
+#### AC-10: Password Validation
+
+**Given** I am on the sign-in screen  
+**When** I attempt to submit the form with an empty password field  
+**Then** I see an error message "Please enter your password"  
+**And** the form does not submit
+
+**When** I enter a password with fewer than 6 characters  
+**Then** I see an error message "Password must be at least 6 characters"  
+**And** the form does not submit
+
+**When** I enter a valid password (6+ characters)  
+**Then** no password error is displayed  
+**And** I can proceed with form submission (if email is valid)
+
+**Additional Criteria**:
+- [ ] Password validation occurs on form submission
+- [ ] Password field is obscured by default
+- [ ] Minimum 6 character requirement enforced
+- [ ] Error messages are clear and helpful
+
+---
+
+#### AC-11: Password Visibility Toggle
+
+**Given** I am on the sign-in screen  
+**When** the password field is in obscured mode (default)  
+**Then** I see an "eye with slash" icon in the password field  
+**And** the password text appears as dots/asterisks
+
+**When** I tap the visibility toggle icon  
+**Then** the password text becomes visible  
+**And** the icon changes to an "eye" icon (no slash)
+
+**When** I tap the icon again  
+**Then** the password returns to obscured mode  
+**And** the icon changes back to "eye with slash"
+
+**Additional Criteria**:
+- [ ] Toggle works instantly without form submission
+- [ ] Icon clearly indicates current state
+- [ ] Toggle state persists while on the screen
+- [ ] No security issues from password visibility
+
+---
+
+#### AC-12: Successful Sign-In Flow
+
+**Given** I have entered a valid email and password  
+**When** I tap the "Sign In" button  
+**Then** I see a success message "Signing in as [email]..."  
+**And** the message appears in a green snackbar  
+**And** the message displays for 2 seconds
+
+**When** the sign-in completes (after ~1 second)  
+**Then** I am automatically navigated back to the order screen  
+**And** the sign-in screen is removed from the navigation stack
+
+**Additional Criteria**:
+- [ ] Success feedback is clear and positive
+- [ ] Navigation happens automatically
+- [ ] No errors occur during the process
+- [ ] User experience is smooth and professional
+
+---
+
+#### AC-13: Forgot Password Link
+
+**Given** I am on the sign-in screen  
+**When** I tap the "Forgot Password?" link  
+**Then** I see a snackbar message "Password reset functionality coming soon!"  
+**And** I remain on the sign-in screen
+
+**Additional Criteria**:
+- [ ] Link is clearly visible below sign-in button
+- [ ] Link is styled as a blue text button
+- [ ] Placeholder message is user-friendly
+- [ ] Functionality ready for future implementation
+
+---
+
+#### AC-14: Sign-Up Link
+
+**Given** I am on the sign-in screen  
+**When** I tap the "Sign Up" link  
+**Then** I see a snackbar message "Sign up functionality coming soon!"  
+**And** I remain on the sign-in screen
+
+**Additional Criteria**:
+- [ ] Link follows standard UX pattern ("Don't have an account? Sign Up")
+- [ ] "Sign Up" portion is styled in orange to match app theme
+- [ ] Link is bold and clearly clickable
+- [ ] Placeholder message is user-friendly
+
+---
+
+### 4. Technical Requirements
+
+#### 4.1 SignInScreen Implementation (`lib/views/sign_in_screen.dart`)
+- [ ] Implement as StatefulWidget for form state management
+- [ ] Use TextEditingController for email and password fields
+- [ ] Use GlobalKey<FormState> for form validation
+- [ ] Implement proper dispose() to prevent memory leaks
+- [ ] Use TextFormField widgets with validators
+- [ ] Handle password obscuring state
+- [ ] Show appropriate feedback using SnackBar
+- [ ] Navigate using Navigator.pop() after successful sign-in
+
+#### 4.2 OrderScreen Updates (`lib/views/order_screen.dart`)
+- [ ] Import SignInScreen
+- [ ] Add `_navigateToSignIn()` navigation method
+- [ ] Add FloatingActionButton.extended with:
+  - Icon: Icons.person
+  - Label: "Sign In"
+  - Background color: Colors.orange
+  - Position: FloatingActionButtonLocation.startFloat
+- [ ] Ensure button doesn't interfere with existing UI
+
+#### 4.3 Form Validation
+- [ ] Email validation: check for @ symbol presence
+- [ ] Password validation: minimum 6 characters
+- [ ] Display inline error messages below respective fields
+- [ ] Prevent form submission with invalid data
+- [ ] Clear error messages when validation passes
+
+#### 4.4 Code Quality
+- [ ] Follow Flutter and Dart best practices
+- [ ] Use const constructors where possible
+- [ ] Proper state management with setState()
+- [ ] Clean and readable code structure
+- [ ] Meaningful variable and method names
+
+---
+
+### 5. UI/UX Requirements
+
+#### 5.1 Visual Design
+- [ ] Consistent with existing app theme and styles
+- [ ] Orange accent color for primary actions (matching app theme)
+- [ ] Clear visual hierarchy (logo → heading → form → actions)
+- [ ] Adequate spacing between elements
+- [ ] Professional and welcoming appearance
+- [ ] App logo displayed prominently at top
+
+#### 5.2 Form Design
+- [ ] Input fields have clear labels
+- [ ] Prefix icons for email (Icons.email) and password (Icons.lock)
+- [ ] OutlineInputBorder for text fields
+- [ ] Password visibility toggle as suffix icon
+- [ ] Sign-in button spans full width with padding
+- [ ] Sign-in button has clear call-to-action styling
+
+#### 5.3 Interaction Design
+- [ ] Smooth transitions between screens
+- [ ] Immediate visual feedback on button taps
+- [ ] Clear focus indicators for form fields
+- [ ] Keyboard appears automatically on screen load
+- [ ] Keyboard type optimized for email entry
+- [ ] Form scrollable to prevent keyboard overlap
+
+#### 5.4 Accessibility
+- [ ] Sufficient touch targets (minimum 44x44 points)
+- [ ] High contrast text and buttons
+- [ ] Clear error messages
+- [ ] Keyboard navigation support
+- [ ] Screen reader compatible labels
+
+---
+
+### 6. Testing Requirements
+
+#### 6.1 Widget Tests
+- [ ] Test navigation from order screen to sign-in screen
+- [ ] Test email validation (empty, no @, valid)
+- [ ] Test password validation (empty, too short, valid)
+- [ ] Test password visibility toggle
+- [ ] Test form submission with invalid data
+- [ ] Test form submission with valid data
+- [ ] Test forgot password link interaction
+- [ ] Test sign-up link interaction
+- [ ] Test back button navigation
+
+#### 6.2 Integration Tests
+- [ ] Test complete sign-in flow from order screen
+- [ ] Test navigation stack after sign-in
+- [ ] Test form state persistence during screen lifecycle
+
+---
+
+### 7. Non-Functional Requirements
+
+#### 7.1 Performance
+- [ ] Sign-in screen loads in < 500ms
+- [ ] Form validation is instant (< 100ms)
+- [ ] No UI lag during password toggle
+- [ ] Smooth 60fps animations
+
+#### 7.2 Security
+- [ ] Password field obscured by default
+- [ ] No password logging in debug console
+- [ ] Secure text entry flag enabled
+- [ ] Ready for integration with authentication backend
+
+#### 7.3 Compatibility
+- [ ] Works on iOS (iPhone and iPad)
+- [ ] Works on Android (phones and tablets)
+- [ ] Works on web browsers
+- [ ] Responsive to different screen sizes
+- [ ] Handles both portrait and landscape orientations
+
+---
+
+### 8. Future Enhancements (Out of Scope)
+
+The following are **not** included in the current implementation but planned for future iterations:
+
+- ❌ Backend authentication integration
+- ❌ Actual password reset functionality
+- ❌ Sign-up screen and registration flow
+- ❌ Social media authentication (Google, Facebook, Apple)
+- ❌ Remember me / Keep me signed in
+- ❌ Biometric authentication (Face ID, Touch ID)
+- ❌ Two-factor authentication
+- ❌ Session management and token handling
+- ❌ Account profile management
+- ❌ Order history for signed-in users
+
+---
+
+### 9. Dependencies
+
+- Flutter Material Design library
+- Existing OrderScreen (`lib/views/order_screen.dart`)
+- Existing app_styles (`lib/views/app_styles.dart`)
+- Navigator for screen transitions
+- ScaffoldMessenger for feedback messages
+
+---
+
+### 10. Definition of Done
+
+The User Authentication feature is considered complete when:
+
+1. ✅ Sign-in screen is created with all required UI elements
+2. ✅ Floating action button added to order screen
+3. ✅ Navigation between screens works correctly
+4. ✅ Email and password validation implemented
+5. ✅ Password visibility toggle works
+6. ✅ Success feedback displayed on sign-in
+7. ✅ All acceptance criteria met and verified
+8. ✅ Code follows project standards and best practices
+9. ✅ No compiler warnings or errors
+10. ✅ Feature is tested on multiple devices/platforms
+11. ✅ Code is committed and pushed to repository
+
+---
+
+### 11. Implementation Notes
+
+**Current Status**: ✅ Implemented
+
+**Files Modified/Created**:
+- Created: `lib/views/sign_in_screen.dart` - Complete sign-in screen implementation
+- Modified: `lib/views/order_screen.dart` - Added floating action button and navigation
+
+**Key Implementation Details**:
+- Sign-in screen uses StatefulWidget with form validation
+- Email validation checks for @ symbol
+- Password validation enforces 6-character minimum
+- Password visibility toggle implemented with state management
+- Success feedback shown via SnackBar
+- Automatic navigation back to order screen after 1 second delay
+- Forgot password and sign-up links show placeholder messages
+- Floating action button positioned at bottom-left using FloatingActionButtonLocation.startFloat
+
+---
