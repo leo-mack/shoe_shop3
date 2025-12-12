@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/widgets/app_drawer.dart';
+import 'package:sandwich_shop/models/cart.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -66,11 +68,8 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign In', style: heading1),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
+      drawer: AppDrawer(cart: Cart()),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
