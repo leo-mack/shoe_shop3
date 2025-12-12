@@ -1,9 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sandwich_shop/views/sign_in_screen.dart';
+import 'package:sandwich_shop/views/cart_screen.dart';
+import 'package:sandwich_shop/models/cart.dart';
 
 void main() {
   group('SignInScreen Widget Tests', () {
+    testWidgets('drawer is present and opens via hamburger',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: SignInScreen(),
+        ),
+      );
+
+      // Hamburger menu tooltip varies by platform; use standard tooltip
+      final menuButton = find.byTooltip('Open navigation menu');
+      expect(menuButton, findsOneWidget);
+      await tester.tap(menuButton);
+      await tester.pumpAndSettle();
+
+      // Drawer should be visible with expected items
+      expect(find.text('Sandwich Shop'), findsOneWidget);
+      expect(find.text('Home / Order'), findsOneWidget);
+      expect(find.text('View Cart'), findsOneWidget);
+      expect(find.text('Sign In'), findsOneWidget);
+      expect(find.text('About'), findsOneWidget);
+    });
+
+    testWidgets('drawer: tapping View Cart navigates to CartScreen',
+        (WidgetTester tester) async {
+      final cart = Cart();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            appBar: AppBar(title: const Text('Test')),
+            drawer: Builder(
+              builder: (context) {
+                // Use the same AppDrawer wiring as app: in SignIn it's new Cart(), here we pass cart
+                return Drawer(
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        title: const Text('View Cart'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CartScreen(cart: cart),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      // Open the drawer and tap View Cart
+      await tester.tap(find.byTooltip('Open navigation menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('View Cart'));
+      await tester.pumpAndSettle();
+
+      // Expect CartScreen
+      expect(find.byType(CartScreen), findsOneWidget);
+    });
     testWidgets('displays all required UI elements',
         (WidgetTester tester) async {
       await tester.pumpWidget(

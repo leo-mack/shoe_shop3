@@ -351,6 +351,7 @@ These may be considered for future iterations.
 |---------|------|--------|---------|
 | 1.0 | 2025-12-12 | Initial | Created requirements document |
 | 1.1 | 2025-12-12 | Update | Added User Authentication Feature requirements |
+| 1.2 | 2025-12-12 | Update | Added Global App Drawer requirements and tests |
 
 ---
 
@@ -397,6 +398,78 @@ These may be considered for future iterations.
 **Story Points**: 2
 
 ---
+
+## Feature Request: Global App Drawer
+
+### 1. Feature Overview
+
+**Title**: Add a global navigation drawer accessible from all screens
+
+**Description**: Implement a reusable `AppDrawer` component that provides consistent navigation across the app. The drawer should be available on all major screens (Order, Cart, Checkout, About, Sign-In) and allow users to quickly navigate to key destinations, including the cart.
+
+**Access Points**: The drawer appears via the AppBar hamburger icon on all screens where it's included.
+
+### 2. User Stories
+
+#### US-10: Open Drawer Anywhere
+**As a** user on any screen
+**I want to** open a navigation drawer
+**So that** I can quickly navigate without returning to the home screen
+
+**Priority**: High  
+**Story Points**: 2
+
+#### US-11: Navigate to Cart from Drawer
+**As a** user viewing any screen
+**I want to** tap "View Cart" in the drawer
+**So that** I can immediately review my order
+
+**Priority**: High  
+**Story Points**: 3
+
+#### US-12: Access About and Sign-In
+**As a** user
+**I want to** tap "About" and "Sign In" in the drawer
+**So that** I can learn about the shop or authenticate
+
+**Priority**: Medium  
+**Story Points**: 2
+
+### 3. Acceptance Criteria
+
+#### AC-15: Drawer Present on All Key Screens
+- [ ] `AppDrawer` is present on Order, Cart, Checkout, About, and Sign-In screens
+- [ ] AppBar shows hamburger icon to open the drawer
+- [ ] Drawer header shows app branding (logo, title)
+
+#### AC-16: View Cart Navigation
+- [ ] Tapping "View Cart" closes the drawer and navigates to `CartScreen`
+- [ ] The `Cart` instance is passed correctly to `CartScreen`
+- [ ] Back navigation returns to the originating screen
+
+#### AC-17: Other Destinations
+- [ ] "Sign In" navigates to `SignInScreen`
+- [ ] "About" navigates to the named route `/about`
+- [ ] Non-functional entries (Settings, Help) show snackbars
+
+### 4. Technical Requirements
+- [ ] Create `lib/widgets/app_drawer.dart` as a `StatelessWidget`
+- [ ] `AppDrawer` requires a `Cart` parameter for navigation to `CartScreen`
+- [ ] Include drawer in all target screens’ `Scaffold`
+- [ ] Use `Navigator.push(...)` for `CartScreen` and `SignInScreen`, `Navigator.pushNamed('/about')` for About
+
+### 5. Testing Requirements
+- [ ] Widget test verifies drawer presence on each screen
+- [ ] Widget test opens drawer via hamburger icon (`find.byTooltip('Open navigation menu')`)
+- [ ] Tapping "View Cart" navigates to `CartScreen`
+- [ ] Tapping "About" navigates to `/about`
+- [ ] Tapping "Sign In" navigates to `SignInScreen`
+
+### 6. Definition of Done
+- Drawer accessible from all target screens
+- Navigation items behave per acceptance criteria
+- Tests updated and passing
+- Code formatted and committed
 
 #### US-7: Sign In with Email and Password
 **As a** registered customer  
