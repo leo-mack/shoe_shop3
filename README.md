@@ -1,3 +1,4 @@
+
 # Sandwich Shop
 
 This is a simple Flutter app that allows users to order sandwiches.
@@ -39,7 +40,7 @@ You may want to change directory (`cd`) to the directory where you want to clone
 repository first.
 
 ```bash
-git clone --branch 2 https://github.com/manighahrmani/sandwich_shop
+git clone --branch 3 https://github.com/manighahrmani/sandwich_shop
 cd sandwich_shop
 code .
 ```
@@ -51,7 +52,7 @@ Remember to `cd` to the directory where you cloned the repository first.
 
 ```bash
 git fetch origin
-git checkout 2
+git checkout 3
 ```
 
 ## Run the app
