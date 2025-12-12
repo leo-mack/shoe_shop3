@@ -138,5 +138,295 @@ void main() {
       expect(find.text('Qty: 3 - £33.00'), findsOneWidget);
       expect(find.text('Total: £33.00'), findsOneWidget);
     });
+
+    testWidgets('shows empty cart message when removing all items',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.veggieDelight,
+        isFootlong: false,
+        breadType: BreadType.white,
+      );
+      cart.add(sandwich);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      expect(find.text('Veggie Delight'), findsOneWidget);
+      expect(find.text('Your cart is empty'), findsNothing);
+
+      // Tap remove button
+      await tester.tap(find.text('Remove'));
+      await tester.pumpAndSettle();
+
+      // Confirm removal
+      await tester.tap(find.text('Remove').last);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Your cart is empty'), findsOneWidget);
+      expect(find.text('Item removed from cart'), findsOneWidget);
+    });
+
+    testWidgets('increment button increases quantity',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.chickenTeriyaki,
+        isFootlong: false,
+        breadType: BreadType.wheat,
+      );
+      cart.add(sandwich, quantity: 1);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      expect(find.text('Qty: 1'), findsOneWidget);
+
+      // Tap increment button
+      await tester.tap(find.byIcon(Icons.add_circle_outline));
+      await tester.pump();
+
+      expect(find.text('Qty: 2'), findsOneWidget);
+    });
+
+    testWidgets('decrement button decreases quantity',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.tunaMelt,
+        isFootlong: true,
+        breadType: BreadType.wholemeal,
+      );
+      cart.add(sandwich, quantity: 3);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      expect(find.text('Qty: 3'), findsOneWidget);
+
+      // Tap decrement button
+      await tester.tap(find.byIcon(Icons.remove_circle_outline));
+      await tester.pump();
+
+      expect(find.text('Qty: 2'), findsOneWidget);
+    });
+
+    testWidgets('decrement button is disabled when quantity is 1',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.meatballMarinara,
+        isFootlong: false,
+        breadType: BreadType.white,
+      );
+      cart.add(sandwich, quantity: 1);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      final IconButton decrementButton = tester.widget<IconButton>(
+        find.byIcon(Icons.remove_circle_outline),
+      );
+
+      expect(decrementButton.onPressed, isNull);
+    });
+
+    testWidgets('remove button shows confirmation dialog',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.veggieDelight,
+        isFootlong: false,
+        breadType: BreadType.wheat,
+      );
+      cart.add(sandwich);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      await tester.tap(find.text('Remove'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Remove Item'), findsOneWidget);
+      expect(
+          find.text(
+              'Are you sure you want to remove this item from your cart?'),
+          findsOneWidget);
+    });
+
+    testWidgets('remove button cancel keeps item in cart',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.chickenTeriyaki,
+        isFootlong: true,
+        breadType: BreadType.white,
+      );
+      cart.add(sandwich);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      expect(find.text('Chicken Teriyaki'), findsOneWidget);
+
+      await tester.tap(find.text('Remove'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Chicken Teriyaki'), findsOneWidget);
+      expect(find.text('Item removed from cart'), findsNothing);
+    });
+
+    testWidgets('clear cart button shows confirmation dialog',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.tunaMelt,
+        isFootlong: false,
+        breadType: BreadType.wheat,
+      );
+      cart.add(sandwich);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      await tester.tap(find.text('Clear Cart'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Clear Cart'), findsNWidgets(2));
+      expect(
+          find.text(
+              'Are you sure you want to remove all items from your cart?'),
+          findsOneWidget);
+    });
+
+    testWidgets('clear cart confirmed removes all items',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich1 = Sandwich(
+        type: SandwichType.veggieDelight,
+        isFootlong: true,
+        breadType: BreadType.white,
+      );
+      final Sandwich sandwich2 = Sandwich(
+        type: SandwichType.meatballMarinara,
+        isFootlong: false,
+        breadType: BreadType.wheat,
+      );
+      cart.add(sandwich1);
+      cart.add(sandwich2);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      expect(find.text('Veggie Delight'), findsOneWidget);
+      expect(find.text('Meatball Marinara'), findsOneWidget);
+
+      await tester.tap(find.text('Clear Cart'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Clear All'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Veggie Delight'), findsNothing);
+      expect(find.text('Meatball Marinara'), findsNothing);
+      expect(find.text('Your cart is empty'), findsOneWidget);
+      expect(find.text('Cart cleared'), findsOneWidget);
+    });
+
+    testWidgets('clear cart cancel keeps items in cart',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.chickenTeriyaki,
+        isFootlong: false,
+        breadType: BreadType.white,
+      );
+      cart.add(sandwich);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      expect(find.text('Chicken Teriyaki'), findsOneWidget);
+
+      await tester.tap(find.text('Clear Cart'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Chicken Teriyaki'), findsOneWidget);
+      expect(find.text('Cart cleared'), findsNothing);
+    });
+
+    testWidgets('total price updates when quantity changes',
+        (WidgetTester tester) async {
+      final Cart cart = Cart();
+      final Sandwich sandwich = Sandwich(
+        type: SandwichType.veggieDelight,
+        isFootlong: false,
+        breadType: BreadType.white,
+      );
+      cart.add(sandwich, quantity: 1);
+
+      final CartScreen cartScreen = CartScreen(cart: cart);
+      final MaterialApp app = MaterialApp(
+        home: cartScreen,
+      );
+
+      await tester.pumpWidget(app);
+
+      // Get initial total
+      expect(find.textContaining('Total: £'), findsOneWidget);
+      String initialTotal =
+          tester.widget<Text>(find.textContaining('Total: £')).data ?? '';
+
+      // Increment quantity
+      await tester.tap(find.byIcon(Icons.add_circle_outline));
+      await tester.pump();
+
+      // Verify total changed
+      String updatedTotal =
+          tester.widget<Text>(find.textContaining('Total: £')).data ?? '';
+      expect(initialTotal != updatedTotal, true);
+    });
   });
 }
