@@ -63,4 +63,38 @@ class Cart {
     }
     return 0;
   }
+
+  // Get items as a list for indexed access
+  List<MapEntry<Sandwich, int>> get itemsList {
+    return _items.entries.toList();
+  }
+
+  // Update quantity at a specific index
+  void updateQuantity(int index, int newQuantity) {
+    if (index < 0 || index >= _items.length) {
+      throw RangeError('Index out of range');
+    }
+
+    if (newQuantity < 0) {
+      throw ArgumentError('Quantity cannot be negative');
+    }
+
+    final sandwich = itemsList[index].key;
+
+    if (newQuantity == 0) {
+      _items.remove(sandwich);
+    } else {
+      _items[sandwich] = newQuantity;
+    }
+  }
+
+  // Remove item at a specific index
+  void removeAt(int index) {
+    if (index < 0 || index >= _items.length) {
+      throw RangeError('Index out of range');
+    }
+
+    final sandwich = itemsList[index].key;
+    _items.remove(sandwich);
+  }
 }
